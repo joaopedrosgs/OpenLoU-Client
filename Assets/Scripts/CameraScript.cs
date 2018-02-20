@@ -10,8 +10,35 @@ public class CameraScript : MonoBehaviour
     public InputField XInput;
     public InputField YInput;
     public TilemapController TilemapController;
+    private float minimumOrtographicSize;
+    private Camera CameraComponent;
+    public float ScrollSpeed;
 
 
+    void Start()
+    {
+        float mScale = Screen.height / 600F;
+        minimumOrtographicSize = (Screen.height / (mScale * 128));
+        CameraComponent = GetComponent<Camera>();
+        CameraComponent.orthographicSize = minimumOrtographicSize;
+    }
+
+    private void Awake()
+    {
+        TilemapController = FindObjectOfType<TilemapController>();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        var inputWheel = Input.GetAxis("Mouse ScrollWheel");
+        if (CameraComponent.orthographicSize + inputWheel >= minimumOrtographicSize || inputWheel > 0)
+        {
+            CameraComponent.orthographicSize += Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * ScrollSpeed *
+                                                CameraComponent.orthographicSize;
+        }
+
+    }
     public void GoToTile()
     {
         var x = int.Parse(XInput.text);
@@ -39,16 +66,5 @@ public class CameraScript : MonoBehaviour
     }
 
     // Use this for initialization
-    void Start()
-    {
-        float mScale = Screen.height / 600F;
-        GetComponent<Camera>().orthographicSize = (Screen.height / (mScale * 128));
 
-        TilemapController = FindObjectOfType<TilemapController>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-    }
 }

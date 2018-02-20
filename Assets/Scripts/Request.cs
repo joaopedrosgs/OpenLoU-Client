@@ -2,6 +2,7 @@
 
 namespace Assets.Scripts
 {
+
     public class Request
     {
         public string Key;

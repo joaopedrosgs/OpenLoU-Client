@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,7 +13,42 @@ public static class DataHolder
 
     public static List<City> RegionCities { get; set; }
 
-    public static City SelectedCity;
+    private static City _selectedCity;
+    public static City SelectedCity
+    {
+        get
+        {
+            if (_selectedCity == null)
+            {
+                if(UserCities.Count()>0)
+                    _selectedCity = UserCities[0];
+            }
+
+            return _selectedCity;
+        }
+        set
+        {
+            _selectedCity = value;
+            var uiController = GameObject.FindObjectOfType<UIController>();
+            if (uiController != null)
+            {
+                uiController.UpdateCityInfo();
+            }
+            else
+            {
+                Debug.Log("UiController not found");
+            }
+            var cityController = GameObject.FindObjectOfType<CityController>();
+            if (cityController != null)
+            {
+                cityController.UpdateCityView();
+            }else
+            {
+                Debug.Log("CityController not found, Maybe in Region View?");
+            }
+
+        }
+    }
 
 
     public static List<Dropdown.OptionData> GetDropdownOptions()
@@ -23,6 +59,7 @@ public static class DataHolder
             CityDropdownData data = new CityDropdownData(city.Name, city.ID);
             names.Add(data);
         }
+        names = names.OrderBy(x => x.text).ToList();
 
         return names;
     }

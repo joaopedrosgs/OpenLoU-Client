@@ -9,7 +9,7 @@ public class TilemapController : MonoBehaviour
 
 	public Tilemap Tilemap;
 	// Use this for initialization
-	void Start ()
+	void Awake ()
 	{
 		Tilemap = FindObjectOfType<Tilemap>();
 
@@ -23,6 +23,7 @@ public class TilemapController : MonoBehaviour
 	public void SetTile(int x, int y, int type)
 	{
 		Tilemap.SetTile(new Vector3Int(x,y,0),Tiles[type]);
+		Camera.main.transform.position = CellToWorld(x, y);
 	}
 	public void SetTile(int x, int y,int continent, int type)
 	{

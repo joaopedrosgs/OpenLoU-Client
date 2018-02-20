@@ -12,8 +12,5 @@ EditorBuildSettings:
     path: Assets/Scenes/loading.unity
     guid: e4d0ee5389faaa64cb4d1200f9618582
   - enabled: 1
-    path: Assets/Scenes/city.unity
+    path: Assets/Scenes/gameView.unity
     guid: 0818780b3bd3e4f4bbba92ace1dd5ee6
-  - enabled: 1
-    path: Assets/Scenes/region.unity
-    guid: 2050cdab1e335f24680cc7f60b30037b

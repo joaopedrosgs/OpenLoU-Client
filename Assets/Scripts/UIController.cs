@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts;
@@ -17,7 +18,10 @@ public class UIController : MonoBehaviour
     private InputField XInputField;
     private InputField YInputField;
 
-    private void Start()
+    public GameObject RegionView;
+    public GameObject CityView;
+
+    private void Awake()
     {
         XInputField = GameObject.Find("XInput").GetComponent<InputField>();
         YInputField = GameObject.Find("YInput").GetComponent<InputField>();
@@ -30,71 +34,75 @@ public class UIController : MonoBehaviour
             continentDropdown.options.Add(option);
         }
 
-        UpdateDropdownCities();
+        PopulateCitiesDropdown();
     }
 
-    public void UpdateDropdownCities()
+    public void PopulateCitiesDropdown()
     {
-        if (CitiesDropdown == null)
-        {
-            Start();
-        }
-
         CitiesDropdown.ClearOptions();
         CitiesDropdown.AddOptions(DataHolder.GetDropdownOptions());
-        OnUpdateDropdownCities();
     }
 
-    public void OnUpdateDropdownCities()
+    public void OnSelectCityDropDown()
     {
+        DataHolder.SelectedCity = GetSelectedCity();
+        //Camera.main.GetComponent<CameraScript>().GoToTile(11, 11);
         continentDropdown.value = DataHolder.SelectedCity.ContinentID;
         XInputField.text = DataHolder.SelectedCity.X.ToString();
         YInputField.text = DataHolder.SelectedCity.Y.ToString();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-    }
-
     public void OpenRegionView()
     {
-        SceneManager.LoadScene(3);
+        CityView.SetActive(false);
+        RegionView.SetActive(true);
     }
 
     public void OpenCityView()
     {
-        SceneManager.LoadScene(2);
+        CityView.SetActive(true);
+        RegionView.SetActive(false);
     }
 
     public City GetSelectedCity()
     {
         if (CitiesDropdown == null)
         {
-            Start();
+            CitiesDropdown = GameObject.Find("CitiesDropdown").GetComponent<Dropdown>();
         }
 
         var indice = CitiesDropdown.value;
-        var CityID = ((CityDropdownData) CitiesDropdown.options[indice]).CityID;
+        var CityID = ((CityDropdownData)CitiesDropdown.options[indice]).CityID;
         return DataHolder.UserCities.First(city => city.ID == CityID);
     }
 
     public void ShowInfoAboutConstruction(Vector3Int cell)
     {
-        if (DataHolder.SelectedCity.Data.Constructions.Contains(new Construction {X = cell.x, Y = cell.y}))
+        try
         {
             var construction =
-                DataHolder.SelectedCity.Data.Constructions.First(x =>
+                DataHolder.SelectedCity.Data.Constructions.Find(x =>
                     x.X == cell.x && x.Y == cell.y);
-            if (construction != null)
-            {
-                var dic = new Dictionary<string, int>();
-                dic["X"] = cell.x;
-                dic["Y"] = cell.y;
-                dic["CityID"] = DataHolder.SelectedCity.ID;
-                var res = Client.WriteToServer(AnswerTypes.UpgradeConstruction, dic);
-                Debug.Log(res);
-            }
+            Debug.Log(JsonConvert.SerializeObject(construction));
         }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public void UpgradeConstruction(int x, int y, int cityId)
+    {
+        var dic = new Dictionary<string, int>();
+        dic["X"] = x;
+        dic["Y"] = y;
+        dic["CityID"] = cityId;
+        Client.WriteToServer(AnswerTypes.UpgradeConstruction, dic);
+    }
+
+    public void UpdateCityInfo()
+    {
+        Debug.Log(JsonConvert.SerializeObject(GetSelectedCity()));
     }
 }
