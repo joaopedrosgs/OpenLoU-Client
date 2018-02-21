@@ -1,4 +1,5 @@
-# OpenLoU-Client
+![alt text](https://i.imgur.com/ps8rKwz.png "Game screenshot")
+
 #### About:
 Its an online strategy game client under development.
 
