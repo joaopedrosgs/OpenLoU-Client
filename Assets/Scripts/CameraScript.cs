@@ -12,7 +12,9 @@ public class CameraScript : MonoBehaviour
     public TilemapController TilemapController;
     private float minimumOrtographicSize;
     private Camera CameraComponent;
-    public float ScrollSpeed;
+    public int ScrollStep = 1;
+    public int MaxDistance = 8;
+    private int MinDistance;
 
 
     void Start()
@@ -21,6 +23,8 @@ public class CameraScript : MonoBehaviour
         minimumOrtographicSize = (Screen.height / (mScale * 128));
         CameraComponent = GetComponent<Camera>();
         CameraComponent.orthographicSize = minimumOrtographicSize;
+        MinDistance = (int)minimumOrtographicSize;
+
     }
 
     private void Awake()
@@ -32,10 +36,13 @@ public class CameraScript : MonoBehaviour
     void Update()
     {
         var inputWheel = Input.GetAxis("Mouse ScrollWheel");
-        if (CameraComponent.orthographicSize + inputWheel >= minimumOrtographicSize || inputWheel > 0)
+        if (inputWheel < 0 && CameraComponent.orthographicSize + ScrollStep < MaxDistance)
         {
-            CameraComponent.orthographicSize += Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * ScrollSpeed *
-                                                CameraComponent.orthographicSize;
+            CameraComponent.orthographicSize += ScrollStep;
+        }
+        else if (inputWheel > 0 && CameraComponent.orthographicSize + ScrollStep >= MinDistance)
+        {
+            CameraComponent.orthographicSize -= ScrollStep;
         }
 
     }
