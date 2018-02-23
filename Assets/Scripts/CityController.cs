@@ -1,27 +1,61 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts;
 using Newtonsoft.Json;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class CityController : MonoBehaviour
 {
-    private TilemapController _constructionsTilemapController;
+    public Tilemap Tilemap;
 
+    private UIController uiController;
     // Use this for initialization
-    void Awake()
-    {
-        _constructionsTilemapController = FindObjectOfType<TilemapController>();
-    }
 
+    public TextAsset[] ConstructionsJson;
+    public List<ConstructionType> Constructions;
+    private bool constructionsLoaded;
+
+    private void Awake()
+    {
+        Constructions = new List<ConstructionType>();
+        var i = 0;
+        StartCoroutine(PopulateConstructionList());
+
+
+    }
+    private IEnumerator PopulateConstructionList()
+    {
+        foreach (var ConstructionJson in ConstructionsJson)
+        {
+            var construction = JsonConvert.DeserializeObject<ConstructionType>(ConstructionJson.text);
+            string[] path = { "Assets/Modules/constructions" };
+            var guid = AssetDatabase.FindAssets(construction.Name + " t:tile");
+            if (guid.Any())
+            {
+                var assetPath = AssetDatabase.GUIDToAssetPath(guid[0]);
+                construction.Tile = (UnityEngine.Tilemaps.Tile)AssetDatabase.LoadAssetAtPath(assetPath, typeof(UnityEngine.Tilemaps.Tile));
+                Debug.Log(assetPath);
+            }
+            Constructions.Add(construction);
+            Debug.Log(construction.ID);
+        }
+        constructionsLoaded = true;
+        yield return null;
+
+    }
     private void OnEnable()
     {
         if (DataHolder.SelectedCity != null)
-            UpdateCityView();
+            StartCoroutine(UpdateCityView());
     }
 
-    public void UpdateCityView()
+    public IEnumerator UpdateCityView()
     {
+        yield return new WaitUntil(() => constructionsLoaded);
+
         if (DataHolder.SelectedCity.Data == null || DataHolder.SelectedCity.Data.Constructions == null)
         {
             var map = new Dictionary<string, int>();
@@ -32,14 +66,29 @@ public class CityController : MonoBehaviour
         else
         {
 
-            _constructionsTilemapController.ClearTiles();
+            Tilemap.ClearAllTiles();
             if (DataHolder.SelectedCity.Data != null &&
                 DataHolder.SelectedCity.Data.Constructions != null &&
                 DataHolder.SelectedCity.Data.Constructions.Any())
                 foreach (var construction in DataHolder.SelectedCity.Data.Constructions)
                 {
-                    _constructionsTilemapController.SetTile(construction.X, construction.Y, construction.Type);
+                    var constructionClass = Constructions.First(x => x.ID == construction.Type);
+                    if (constructionClass != null)
+                    {
+                        if (constructionClass.Tile != null)
+                        {
+                            Tilemap.SetTile(new Vector3Int(construction.X, construction.Y, 0), constructionClass.Tile);
+                        }
+                        else
+                        {
+                            Debug.Log("A construcao existe, mas nao tem tile definido");
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("Tile nao encontrado, tipo:" + construction.Type);
 
+                    }
                 }
             else
             {
@@ -47,5 +96,9 @@ public class CityController : MonoBehaviour
                 Debug.Log(DataHolder.SelectedCity.Data);
             }
         }
+        gameObject.transform.position -= Tilemap.CellToWorld(new Vector3Int(11, 11, 0));
+        yield return null;
+
     }
+
 }

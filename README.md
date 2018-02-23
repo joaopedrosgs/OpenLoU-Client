@@ -8,10 +8,15 @@ Its an online strategy game client under development.
 #### Todo:
 
 - Login (Done)
-- List cities (Done)
-- See constructions (Done)
-- Create constructions
-- Upgrade constructions
+- City
+    - Access
+    - Create
+    - Abandon
+- Constructions
+    - Access
+    - Create
+    - Upgrade
+    - Destroy
 - Attack
     - Cities
         - Siege
@@ -21,7 +26,6 @@ Its an online strategy game client under development.
 - Palace
 - Castle
 - Recruit troops
-- Create cities
 
 
 

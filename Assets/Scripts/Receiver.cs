@@ -52,7 +52,7 @@ public class Receiver : MonoBehaviour
 
                         cityFound.Data.Constructions = constructions.Data;
                         if (CityController != null)
-                            CityController.UpdateCityView();
+                            StartCoroutine(CityController.UpdateCityView());
                     }
 
                     break;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
@@ -9,7 +10,10 @@ public class CameraScript : MonoBehaviour
 {
     public InputField XInput;
     public InputField YInput;
-    public TilemapController TilemapController;
+    public Tilemap Tilemap;
+
+    public CityController CityController;
+    public RegionController RegionController;
     private float minimumOrtographicSize;
     private Camera CameraComponent;
     public int ScrollStep = 1;
@@ -25,11 +29,6 @@ public class CameraScript : MonoBehaviour
         CameraComponent.orthographicSize = minimumOrtographicSize;
         MinDistance = (int)minimumOrtographicSize;
 
-    }
-
-    private void Awake()
-    {
-        TilemapController = FindObjectOfType<TilemapController>();
     }
 
     // Update is called once per frame
@@ -51,25 +50,23 @@ public class CameraScript : MonoBehaviour
         var x = int.Parse(XInput.text);
         var y = int.Parse(YInput.text);
         var z = transform.position.z;
-        var newPos = TilemapController.CellToWorld(x, y);
+        var newPos = FindObjectOfType<Tilemap>().CellToWorld(new Vector3Int(x, y, 0));
         newPos.z = z;
         transform.position = newPos;
     }
 
-    public void GoToTile(int x, int y, int continent)
+    public void GoToTile(Construction construction)
     {
-        var z = transform.position.z;
-        var newPos = TilemapController.CellToWorld(x, y, continent);
-        newPos.z = z;
-        transform.position = newPos;
+
+        var tilePos = CityController.Tilemap.CellToWorld(new Vector3Int(construction.X, construction.Y, 0));
+        CityController.gameObject.transform.position -= tilePos;
+
     }
 
-    public void GoToTile(int x, int y)
+    public void GoToTile(City city)
     {
-        var z = transform.position.z;
-        var newPos = TilemapController.CellToWorld(x, y);
-        newPos.z = z;
-        transform.position = newPos;
+        var tilePos = RegionController.Tilemap.CellToWorld(new Vector3Int(city.X, city.Y, 0));
+        RegionController.gameObject.transform.position -= tilePos;
     }
 
     // Use this for initialization

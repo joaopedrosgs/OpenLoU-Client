@@ -20,7 +20,7 @@ public static class DataHolder
         {
             if (_selectedCity == null)
             {
-                if(UserCities.Count()>0)
+                if (UserCities != null && UserCities.Count() > 0)
                     _selectedCity = UserCities[0];
             }
 
@@ -41,8 +41,9 @@ public static class DataHolder
             var cityController = GameObject.FindObjectOfType<CityController>();
             if (cityController != null)
             {
-                cityController.UpdateCityView();
-            }else
+                cityController.StartCoroutine(cityController.UpdateCityView());
+            }
+            else
             {
                 Debug.Log("CityController not found, Maybe in Region View?");
             }
@@ -54,13 +55,15 @@ public static class DataHolder
     public static List<Dropdown.OptionData> GetDropdownOptions()
     {
         List<Dropdown.OptionData> names = new List<Dropdown.OptionData>();
-        foreach (var city in UserCities)
+        if (UserCities != null)
         {
-            CityDropdownData data = new CityDropdownData(city.Name, city.ID);
-            names.Add(data);
+            foreach (var city in UserCities)
+            {
+                CityDropdownData data = new CityDropdownData(city.Name, city.ID);
+                names.Add(data);
+            }
+            names = names.OrderBy(x => x.text).ToList();
         }
-        names = names.OrderBy(x => x.text).ToList();
-
         return names;
     }
 }

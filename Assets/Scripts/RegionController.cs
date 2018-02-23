@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts;
 using Newtonsoft.Json;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
@@ -10,38 +11,105 @@ using UnityEngine.UI;
 public class RegionController : MonoBehaviour
 {
 
-    private TilemapController RegionTileMapController;
+    public Tilemap Tilemap;
+
 
     // Use this for initialization
     void Start()
     {
-        RegionTileMapController = FindObjectOfType<TilemapController>();
-        RegionTileMapController.ClearTiles();
+
+        Tilemap.ClearAllTiles();
 
         var map = new Dictionary<string, int>();
         if (DataHolder.UserCities.Count > 0)
         {
-            map["X"] = DataHolder.UserCities[0].X;
-            map["Y"] = DataHolder.UserCities[0].Y;
-            map["Continent"] = DataHolder.UserCities[0].ContinentID;
+            map["X"] = DataHolder.SelectedCity.X;
+            map["Y"] = DataHolder.SelectedCity.Y;
+            map["Continent"] = DataHolder.SelectedCity.ContinentID;
             map["Range"] = 10;
             Client.WriteToServer(AnswerTypes.GetCities, map);
-            Camera.main.GetComponent<CameraScript>().GoToTile(
-                DataHolder.UserCities[0].X,
-                DataHolder.UserCities[0].Y,
-                DataHolder.UserCities[0].ContinentID);
         }
     }
 
     // Update is called once per frame
 
     public void UpdateRegionView()
-    {;
-
+    {
         foreach (var city in DataHolder.RegionCities)
         {
-            Debug.Log("Setting tile on" + city.X + "And" + city.Y);
-            RegionTileMapController.SetTile(city.X, city.Y,city.ContinentID, city.Type);
+            SetTile(city);
         }
+    }
+    public void SetTile(City city)
+    {
+        string[] path = { "Assets/Modules/constructions" };
+
+        Tilemap.SetTile(new Vector3Int(city.X, city.Y, 0), FindTile(city));
+    }
+    public Tile FindTile(City city)
+    {
+        if (city.Tile == null)
+        {
+            string cityType = String.Empty;
+            int number;
+            switch (city.Type)
+            {
+                case CityType.Normal:
+                    cityType = "town";
+                    break;
+
+                case CityType.Castle:
+
+                    cityType = "military";
+                    break;
+
+                case CityType.Palace:
+
+                    cityType = "palace";
+                    break;
+                default:
+                    break;
+            }
+
+            if (city.Points <= 9)
+            {
+                number = 1;
+            }
+            else if (city.Points <= 99)
+            {
+                number = 2;
+            }
+            else if (city.Points <= 299)
+            {
+                number = 3;
+            }
+            else if (city.Points <= 999)
+            {
+                number = 4;
+            }
+            else if (city.Points <= 2499)
+            {
+                number = 5;
+            }
+            else if (city.Points <= 4999)
+            {
+                number = 6;
+            }
+            else if (city.Points <= 7999)
+            {
+                number = 7;
+            }
+            else
+            {
+                number = 8;
+            }
+
+            var guid = AssetDatabase.FindAssets(cityType + " " + number.ToString() + " t:tile");
+            var path = AssetDatabase.GUIDToAssetPath(guid[0]);
+            city.Tile = (UnityEngine.Tilemaps.Tile)AssetDatabase.LoadAssetAtPath(path, typeof(UnityEngine.Tilemaps.Tile));
+            Debug.Log(path);
+        }
+        return city.Tile;
+
     }
 }

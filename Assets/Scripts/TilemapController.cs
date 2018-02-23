@@ -1,46 +1,44 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class TilemapController : MonoBehaviour
 {
-	public Tile[] Tiles;
 
-	public Tilemap Tilemap;
-	// Use this for initialization
-	void Awake ()
-	{
-		Tilemap = FindObjectOfType<Tilemap>();
+    public Tilemap Tilemap;
 
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public GameObject Decal;
+    // Use this for initialization
+    void Awake()
+    {
+        Tilemap = FindObjectOfType<Tilemap>();
 
-	public void SetTile(int x, int y, int type)
-	{
-		Tilemap.SetTile(new Vector3Int(x,y,0),Tiles[type]);
-		Camera.main.transform.position = CellToWorld(x, y);
-	}
-	public void SetTile(int x, int y,int continent, int type)
-	{
-		Tilemap.SetTile(new Vector3Int(x,y,0),Tiles[type]);
-	}
+    }
 
-	public void ClearTiles()
-	{
-		Tilemap.ClearAllTiles();
-	}
-	public Vector3 CellToWorld(int x, int y)
-	{
-		return Tilemap.CellToWorld(new Vector3Int(x, y, 0));
-		
-	}
-	public Vector3 CellToWorld(int x, int y,int continent)
-	{
-		return Tilemap.CellToWorld(new Vector3Int(x, y, 0));
-	}
+    // Update is called once per frame
+
+
+    public void HighlightTile(Vector3 globalPos)
+    {
+        var cell = Tilemap.WorldToCell(globalPos);
+        Decal.transform.position = Tilemap.CellToLocal(cell);
+        Decal.SetActive(true);
+        var tile = Tilemap.GetTile(cell);
+
+    }
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0) && UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+        {
+            Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            RaycastHit2D hit = Physics2D.Raycast(pos, -Vector2.up);
+            if (hit && hit.collider != null)
+            {
+                HighlightTile(hit.point);
+            }
+        }
+    }
 }

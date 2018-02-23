@@ -21,6 +21,8 @@ public class UIController : MonoBehaviour
     public GameObject RegionView;
     public GameObject CityView;
 
+    public CameraScript CameraScript;
+
     private void Awake()
     {
         XInputField = GameObject.Find("XInput").GetComponent<InputField>();
@@ -56,12 +58,16 @@ public class UIController : MonoBehaviour
     {
         CityView.SetActive(false);
         RegionView.SetActive(true);
+        CameraScript.GoToTile(DataHolder.SelectedCity);
+
     }
 
     public void OpenCityView()
     {
         CityView.SetActive(true);
         RegionView.SetActive(false);
+        CameraScript.GoToTile(DataHolder.SelectedCity.Data.Constructions.Find(x => x.X == 11 && x.Y == 11));
+
     }
 
     public City GetSelectedCity()
