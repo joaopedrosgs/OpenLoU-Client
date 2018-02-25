@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts;
 using Newtonsoft.Json;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -14,38 +13,8 @@ public class CityController : MonoBehaviour
     private UIController uiController;
     // Use this for initialization
 
-    public TextAsset[] ConstructionsJson;
-    public List<ConstructionType> Constructions;
-    private bool constructionsLoaded;
+    public GameObject Decal;
 
-    private void Awake()
-    {
-        Constructions = new List<ConstructionType>();
-        var i = 0;
-        StartCoroutine(PopulateConstructionList());
-
-
-    }
-    private IEnumerator PopulateConstructionList()
-    {
-        foreach (var ConstructionJson in ConstructionsJson)
-        {
-            var construction = JsonConvert.DeserializeObject<ConstructionType>(ConstructionJson.text);
-            string[] path = { "Assets/Modules/constructions" };
-            var guid = AssetDatabase.FindAssets(construction.Name + " t:tile");
-            if (guid.Any())
-            {
-                var assetPath = AssetDatabase.GUIDToAssetPath(guid[0]);
-                construction.Tile = (UnityEngine.Tilemaps.Tile)AssetDatabase.LoadAssetAtPath(assetPath, typeof(UnityEngine.Tilemaps.Tile));
-                Debug.Log(assetPath);
-            }
-            Constructions.Add(construction);
-            Debug.Log(construction.ID);
-        }
-        constructionsLoaded = true;
-        yield return null;
-
-    }
     private void OnEnable()
     {
         if (DataHolder.SelectedCity != null)
@@ -54,7 +23,6 @@ public class CityController : MonoBehaviour
 
     public IEnumerator UpdateCityView()
     {
-        yield return new WaitUntil(() => constructionsLoaded);
 
         if (DataHolder.SelectedCity.Data == null || DataHolder.SelectedCity.Data.Constructions == null)
         {
@@ -72,17 +40,15 @@ public class CityController : MonoBehaviour
                 DataHolder.SelectedCity.Data.Constructions.Any())
                 foreach (var construction in DataHolder.SelectedCity.Data.Constructions)
                 {
-                    var constructionClass = Constructions.First(x => x.ID == construction.Type);
+                    var constructionClass = DataHolder.ConstructionTypes.First(x => x.ID == construction.Type);
                     if (constructionClass != null)
                     {
-                        if (constructionClass.Tile != null)
-                        {
+
+
+                        if (constructionClass.Tile)
                             Tilemap.SetTile(new Vector3Int(construction.X, construction.Y, 0), constructionClass.Tile);
-                        }
                         else
-                        {
-                            Debug.Log("A construcao existe, mas nao tem tile definido");
-                        }
+                            Debug.Log("Tile nao encontrado:" + constructionClass.Name);
                     }
                     else
                     {
@@ -98,6 +64,34 @@ public class CityController : MonoBehaviour
         }
         gameObject.transform.position -= Tilemap.CellToWorld(new Vector3Int(11, 11, 0));
         yield return null;
+
+    }
+    private void Update()
+    {
+
+        if (Input.GetMouseButtonDown(0) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+        {
+            Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            RaycastHit2D hit = Physics2D.Raycast(pos, -Vector2.up);
+            if (hit && hit.collider != null)
+            {
+                HighlightTile(hit.point);
+            }
+            else
+                Debug.Log("click errado");
+        }
+    }
+
+    public void HighlightTile(Vector3 globalPos)
+    {
+        var cell = Tilemap.WorldToCell(globalPos);
+        Decal.transform.localPosition = Tilemap.CellToLocal(cell);
+        Decal.SetActive(true);
+        var construction = DataHolder.SelectedCity.Data.Constructions.Find(x => x.X == cell.x & x.Y == cell.y);
+        if (construction == null)
+            uiController.ShowBuildMenu(cell.x, cell.y);
+        else
+            uiController.ShowInfoAboutConstruction(construction);
 
     }
 

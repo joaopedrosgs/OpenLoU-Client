@@ -19,7 +19,7 @@ namespace Assets.Scripts
         public string Name;
         public int Points;
         public CityData Data;
-        public UnityEngine.Tilemaps.Tile Tile;
+
 
 
     }
@@ -38,7 +38,6 @@ namespace Assets.Scripts
         public int X;
         public int Y;
         public int Level;
-        public UnityEngine.Tilemaps.Tile Tile;
     }
 
     public class ConstructionType

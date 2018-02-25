@@ -11,6 +11,7 @@ public class MouseDrag : MonoBehaviour
     private Camera CameraComponent;
     public GameObject CityView;
     public GameObject RegionView;
+    private bool Draggin;
 
 
     void Start()
@@ -21,11 +22,16 @@ public class MouseDrag : MonoBehaviour
     void Update()
     {
 
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
         {
             MouseStart = new Vector3(Input.mousePosition.x, Input.mousePosition.y, dist);
+            Draggin = true;
         }
-        else if (Input.GetMouseButton(1))
+        else if (Input.GetMouseButtonUp(1))
+        {
+            Draggin = false;
+        }
+        else if (Draggin)
         {
             MouseMove = new Vector3(Input.mousePosition.x - MouseStart.x, Input.mousePosition.y - MouseStart.y, dist);
             MouseStart = new Vector3(Input.mousePosition.x, Input.mousePosition.y, dist);
@@ -42,5 +48,6 @@ public class MouseDrag : MonoBehaviour
                 RegionView.transform.position = newPosition;
             }
         }
+
     }
 }

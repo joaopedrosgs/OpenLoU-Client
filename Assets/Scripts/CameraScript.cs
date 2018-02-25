@@ -35,11 +35,11 @@ public class CameraScript : MonoBehaviour
     void Update()
     {
         var inputWheel = Input.GetAxis("Mouse ScrollWheel");
-        if (inputWheel < 0 && CameraComponent.orthographicSize + ScrollStep < MaxDistance)
+        if (inputWheel < 0 && CameraComponent.orthographicSize + ScrollStep < MaxDistance && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
         {
             CameraComponent.orthographicSize += ScrollStep;
         }
-        else if (inputWheel > 0 && CameraComponent.orthographicSize + ScrollStep >= MinDistance)
+        else if (inputWheel > 0 && CameraComponent.orthographicSize + ScrollStep >= MinDistance && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
         {
             CameraComponent.orthographicSize -= ScrollStep;
         }

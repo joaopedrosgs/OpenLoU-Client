@@ -22,6 +22,7 @@ public class UIController : MonoBehaviour
     public GameObject CityView;
 
     public CameraScript CameraScript;
+    public ConstructionInfo ConstructionInfo;
 
     private void Awake()
     {
@@ -82,20 +83,10 @@ public class UIController : MonoBehaviour
         return DataHolder.UserCities.First(city => city.ID == CityID);
     }
 
-    public void ShowInfoAboutConstruction(Vector3Int cell)
+    public void ShowInfoAboutConstruction(Construction construction)
     {
-        try
-        {
-            var construction =
-                DataHolder.SelectedCity.Data.Constructions.Find(x =>
-                    x.X == cell.x && x.Y == cell.y);
-            Debug.Log(JsonConvert.SerializeObject(construction));
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
+        ConstructionInfo.gameObject.SetActive(true);
+        ConstructionInfo.SetConstruction(construction);
     }
 
     public void UpgradeConstruction(int x, int y, int cityId)
@@ -106,9 +97,23 @@ public class UIController : MonoBehaviour
         dic["CityID"] = cityId;
         Client.WriteToServer(AnswerTypes.UpgradeConstruction, dic);
     }
+    public void CreateConstruction(int Type)
+    {
+        var dic = new Dictionary<string, int>();
+        dic["X"] = DataHolder.SelectedConstruction.X;
+        dic["Y"] = DataHolder.SelectedConstruction.Y;
+        dic["CityID"] = DataHolder.SelectedCity.ID;
+        dic["Type"] = Type;
+        Client.WriteToServer(AnswerTypes.NewConstruction, dic);
+    }
 
     public void UpdateCityInfo()
     {
         Debug.Log(JsonConvert.SerializeObject(GetSelectedCity()));
+    }
+
+    public void ShowBuildMenu(int x, int y)
+    {
+
     }
 }

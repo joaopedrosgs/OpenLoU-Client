@@ -12,8 +12,13 @@ public static class DataHolder
     public static List<City> UserCities { get; set; }
 
     public static List<City> RegionCities { get; set; }
+    public static List<UnityEngine.Tilemaps.Tile> RegionCityTiles;
+    public static List<ConstructionType> ConstructionTypes;
+
+
 
     private static City _selectedCity;
+    public static Construction SelectedConstruction { get; set; }
     public static City SelectedCity
     {
         get
@@ -81,4 +86,5 @@ public class CityDropdownData : Dropdown.OptionData
     {
         CityID = cityId;
     }
+
 }
