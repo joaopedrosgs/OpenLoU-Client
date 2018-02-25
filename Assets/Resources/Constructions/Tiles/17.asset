@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: 17
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 21300000, guid: f2185873dbf89c0499e383c4285f9d7e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b85f58e48230c684cb5275c21fa06346, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
@@ -32,4 +32,4 @@ MonoBehaviour:
     e33: 1
   m_InstancedGameObject: {fileID: 0}
   m_Flags: 1
-  m_ColliderType: 1
+  m_ColliderType: 0

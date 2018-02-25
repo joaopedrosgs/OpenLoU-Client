@@ -34,18 +34,20 @@ public class Loading : MonoBehaviour
     {
         Client.WriteToServer(AnswerTypes.GetCitiesFromUser, null);
         PopulateConstructionList();
-        yield return new WaitUntil(() => DataHolder.UserCities.Count > 0);
+        yield return new WaitUntil(() => DataHolder.UserCities.Count > 0 && DataHolder.SelectedCity != null);
         var map = new Dictionary<string, int>();
-        Debug.Log(DataHolder.SelectedCity.ID);
         map["CityID"] = DataHolder.SelectedCity.ID;
         Client.WriteToServer(AnswerTypes.GetConstructions, map);
-        yield return new WaitUntil(() => DataHolder.SelectedCity.Data != null);
-        foreach (var ConstructionType in DataHolder.ConstructionTypes)
+        yield return new WaitUntil(() => DataHolder.SelectedCity.Data != null && DataHolder.SelectedCity.Data.Constructions != null);
+        for (var i = 0; i < DataHolder.ConstructionTypes.Count; i++)
         {
-            ConstructionType.Tile = CityConstructionTiles.Find(x => x.name == ConstructionType.ID.ToString());
+            var type = DataHolder.ConstructionTypes[i];
+            type.Tile = CityConstructionTiles.Find(x => x.name == type.ID.ToString());
+            DataHolder.ConstructionTypes[i] = type;
         }
         DataHolder.ConstructionTypes = DataHolder.ConstructionTypes.OrderBy(x => x.ID).ToList();
         DataHolder.RegionCityTiles = RegionCityTiles.OrderBy(x => x.name).ToList();
+
         Loaded = true;
 
     }
@@ -70,11 +72,17 @@ public class Loading : MonoBehaviour
         DataHolder.ConstructionTypes = new List<ConstructionType>();
         foreach (var ConstructionJson in ConstructionsJson)
         {
-            var construction = JsonConvert.DeserializeObject<ConstructionType>(ConstructionJson.text);
-            DataHolder.ConstructionTypes.Add(construction);
-            Debug.Log(construction.ID);
-        }
-        DataHolder.ConstructionTypes = DataHolder.ConstructionTypes.OrderBy(x => x.ID).ToList();
 
+            var construction = JsonConvert.DeserializeObject<ConstructionType>(ConstructionJson.text);
+            if (!construction.Equals(default(ConstructionType)))
+                DataHolder.ConstructionTypes.Add(construction);
+            else
+            {
+                Debug.Log("Erro ao ler arquivo Json de nome: " + ConstructionJson.name);
+            }
+        }
+
+        DataHolder.ConstructionTypes = DataHolder.ConstructionTypes.OrderBy(x => x.ID).ToList();
+        Debug.Log("Numero:" + DataHolder.ConstructionTypes.Count);
     }
 }

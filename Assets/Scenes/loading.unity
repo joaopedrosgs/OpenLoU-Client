@@ -654,6 +654,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Slider: {fileID: 1254144216}
   CityConstructionTiles:
+  - {fileID: 11400000, guid: ab67c895323f9774facc723737cd10e6, type: 2}
+  - {fileID: 11400000, guid: 075de07b8295b4f41b3bc0e20abfdaee, type: 2}
+  - {fileID: 11400000, guid: 8f65acb43ab52964f9f972cb8af605d2, type: 2}
+  - {fileID: 11400000, guid: f5e040091e573ba49bedbfb0713dba8c, type: 2}
+  - {fileID: 11400000, guid: e04b3c09714875a4fa87d680f61dd363, type: 2}
+  - {fileID: 11400000, guid: 10ffe18932756944d91fd09f9e84cb6d, type: 2}
+  - {fileID: 11400000, guid: 3a0a8f969a0be0a4bba674428fda2c92, type: 2}
+  - {fileID: 11400000, guid: c4724f554d75ce94cb844603172fe04d, type: 2}
+  - {fileID: 11400000, guid: ead815124809e5d4391ed5adf858c114, type: 2}
   - {fileID: 11400000, guid: 20166ff2a3b6d6b439e462ff9477da50, type: 2}
   - {fileID: 11400000, guid: 99b7b40e6c6ccd94aba61a3818b97779, type: 2}
   - {fileID: 11400000, guid: 7ad42d39f3e248e4686345658091ec1b, type: 2}
@@ -674,27 +683,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 13d88a492b7ec494aa8c4d66967283f8, type: 2}
   - {fileID: 11400000, guid: a5fff7d1f7d06c54199834cca8befc24, type: 2}
   - {fileID: 11400000, guid: 564de18eb92b5a24c8d2c900bb1817c1, type: 2}
-  - {fileID: 11400000, guid: 4fc06cb7ab38529439b6b34c4c24746b, type: 2}
   - {fileID: 11400000, guid: d343b60fce99c1d4dad27fd374f221f3, type: 2}
-  - {fileID: 11400000, guid: 63e63b02b0f412f4fb77833dab610582, type: 2}
-  - {fileID: 11400000, guid: ca729644df6708b439c964c2537f7bd8, type: 2}
-  - {fileID: 11400000, guid: c4724f554d75ce94cb844603172fe04d, type: 2}
-  - {fileID: 11400000, guid: bd137bbf6174db84e8ae88e61aaefe6e, type: 2}
-  - {fileID: 11400000, guid: d9d47032b53bc0746a5bc30745efcdb0, type: 2}
-  - {fileID: 11400000, guid: d1c6e75d3ba56254c8a9a7b3f95b3492, type: 2}
-  - {fileID: 11400000, guid: 075de07b8295b4f41b3bc0e20abfdaee, type: 2}
-  - {fileID: 11400000, guid: 03cd6355c78d79840bb1265ae0d38db0, type: 2}
-  - {fileID: 11400000, guid: a85960025689cb748a9dfc6b4819b880, type: 2}
-  - {fileID: 11400000, guid: 52e896f9a4cf8074e93c7202c6c04791, type: 2}
-  - {fileID: 11400000, guid: 10ffe18932756944d91fd09f9e84cb6d, type: 2}
-  - {fileID: 11400000, guid: ead815124809e5d4391ed5adf858c114, type: 2}
-  - {fileID: 11400000, guid: 01ba2723ff63cb74f96399bc9634b299, type: 2}
-  - {fileID: 11400000, guid: 2dc68e65c6d7bcb47948147db6f18ef0, type: 2}
-  - {fileID: 11400000, guid: 2fd4fe3b6c8900f4bb0d58fea6e2fb00, type: 2}
-  - {fileID: 11400000, guid: 267b17b781b06fc4a8cba4223989225e, type: 2}
-  - {fileID: 11400000, guid: f7743a3bd3ff1d249b83e6a5bec57d14, type: 2}
-  - {fileID: 11400000, guid: f5e040091e573ba49bedbfb0713dba8c, type: 2}
-  - {fileID: 11400000, guid: e60d3ba7b10955646bb373f5dee2427a, type: 2}
+  - {fileID: 11400000, guid: 4fc06cb7ab38529439b6b34c4c24746b, type: 2}
+  - {fileID: 11400000, guid: 0a25726d20fcbcb49ab84b0478a382ee, type: 2}
   RegionCityTiles:
   - {fileID: 11400000, guid: 371b0ba1602596941a94d37723d12305, type: 2}
   - {fileID: 11400000, guid: 0fd152539aaa5c642b9bf85795c3d5e6, type: 2}

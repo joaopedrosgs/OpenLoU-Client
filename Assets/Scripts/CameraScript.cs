@@ -16,32 +16,37 @@ public class CameraScript : MonoBehaviour
     public RegionController RegionController;
     private float minimumOrtographicSize;
     private Camera CameraComponent;
-    public int ScrollStep = 1;
+    public float ScrollStep = 0.01f;
     public int MaxDistance = 8;
     private int MinDistance;
+    private float Size = 1;
 
 
     void Start()
     {
-        float mScale = Screen.height / 600F;
-        minimumOrtographicSize = (Screen.height / (mScale * 128));
+        SetSize(Size);
+
+    }
+    public void SetSize(float size)
+    {
+        minimumOrtographicSize = (Screen.height / (128));
+        Debug.Log(minimumOrtographicSize);
+        Debug.Log(size);
         CameraComponent = GetComponent<Camera>();
         CameraComponent.orthographicSize = minimumOrtographicSize;
-        MinDistance = (int)minimumOrtographicSize;
-
     }
 
     // Update is called once per frame
     void Update()
     {
         var inputWheel = Input.GetAxis("Mouse ScrollWheel");
-        if (inputWheel < 0 && CameraComponent.orthographicSize + ScrollStep < MaxDistance && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+        if (inputWheel < 0 && Size - ScrollStep > 0 && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
         {
-            CameraComponent.orthographicSize += ScrollStep;
+            //SetSize(Size -= ScrollStep);
         }
-        else if (inputWheel > 0 && CameraComponent.orthographicSize + ScrollStep >= MinDistance && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+        else if (inputWheel > 0 && Size + ScrollStep < MaxDistance && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
         {
-            CameraComponent.orthographicSize -= ScrollStep;
+            // SetSize(Size += ScrollStep);
         }
 
     }

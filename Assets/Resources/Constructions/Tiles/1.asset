@@ -7,11 +7,11 @@ MonoBehaviour:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
-  m_EditorHideFlags: 1
-  m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 535f8e525ff367c4ba67961e201a05ed, type: 3}
   m_Name: 1
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 21300000, guid: 97556e60a8a6d354e8ede125e888ac1f, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
@@ -33,3 +33,9 @@ MonoBehaviour:
   m_InstancedGameObject: {fileID: 0}
   m_Flags: 1
   m_ColliderType: 1
+  m_Sprites:
+  - {fileID: 21300000, guid: c83f11836fa60db458f55f2a1dcab9f3, type: 3}
+  - {fileID: 21300000, guid: 1bd82969aecbc3544984f36e5e2f929f, type: 3}
+  - {fileID: 21300000, guid: 343257d896968b942b63f5ae16930c8f, type: 3}
+  - {fileID: 21300000, guid: dc55629fa37ece448b80b6fbf8868896, type: 3}
+  - {fileID: 21300000, guid: a31e38bbd1e027742aee42f44b7af057, type: 3}

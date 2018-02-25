@@ -7,29 +7,27 @@ MonoBehaviour:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
-  m_EditorHideFlags: 1
-  m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13b75c95f34a00d4e8c04f76b73312e6, type: 3}
   m_Name: 4
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 21300000, guid: 276b59b99793afa41ba8d218a10dad01, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Transform:
-    e00: 1
-    e01: 0
-    e02: 0
-    e03: 0
-    e10: 0
-    e11: 1
-    e12: 0
-    e13: 0
-    e20: 0
-    e21: 0
-    e22: 1
-    e23: 0
-    e30: 0
-    e31: 0
-    e32: 0
-    e33: 1
-  m_InstancedGameObject: {fileID: 0}
-  m_Flags: 1
-  m_ColliderType: 1
+  m_AnimatedSprites:
+  - {fileID: 21300000, guid: c47e2619950c20047954cc30a85c634f, type: 3}
+  - {fileID: 21300000, guid: 13ec4eab2418afc4986aa6c19d102111, type: 3}
+  - {fileID: 21300000, guid: d03237f814fece5439b2eb4b05114133, type: 3}
+  - {fileID: 21300000, guid: 01a03db0f13cdcd4ebcf47bbd72680c7, type: 3}
+  - {fileID: 21300000, guid: 953ffe66517bcae4faec2ff9eaa5b122, type: 3}
+  - {fileID: 21300000, guid: 4404fafee50246d47b4e37f9a2980801, type: 3}
+  - {fileID: 21300000, guid: 241f378463fe23147aefabf84b19a005, type: 3}
+  - {fileID: 21300000, guid: fa4b4774671ba3540a1e38c5bfbae72d, type: 3}
+  - {fileID: 21300000, guid: 761df54b1442bff4ca408f3f663fae03, type: 3}
+  - {fileID: 21300000, guid: 4fd0bf7384d971e4a8c87eca2f52ab36, type: 3}
+  - {fileID: 21300000, guid: fb02973a47fbf9f47b6dcb089004c6f9, type: 3}
+  - {fileID: 21300000, guid: 5ecbb4cf2fcf04f43afa23519ce92648, type: 3}
+  - {fileID: 21300000, guid: dd9c645d9ec6e884d855eff643a9603c, type: 3}
+  - {fileID: 21300000, guid: 367c3267717912f4aa4147c483895148, type: 3}
+  - {fileID: 21300000, guid: 4cdb360de9004e249ad60ee6fb18fa8c, type: 3}
+  m_MinSpeed: 1
+  m_MaxSpeed: 1
+  m_AnimationStartTime: 0
+  m_TileColliderType: 0

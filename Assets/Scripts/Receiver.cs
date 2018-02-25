@@ -42,7 +42,7 @@ public class Receiver : MonoBehaviour
                 {
                     Debug.Log("Recebendo construcoes");
                     var constructions = JsonConvert.DeserializeObject<Constructions>(received);
-                    if (DataHolder.UserCities != null)
+                    if (DataHolder.UserCities != null && constructions != null)
                     {
                         var cityFound = DataHolder.UserCities.Find(city => city.ID == constructions.Data[0].CityID);
                         if (cityFound.Data == null)
@@ -53,6 +53,10 @@ public class Receiver : MonoBehaviour
                         cityFound.Data.Constructions = constructions.Data;
                         if (CityController != null)
                             StartCoroutine(CityController.UpdateCityView());
+                    }
+                    else
+                    {
+                        Debug.Log("Erro ao receber");
                     }
 
                     break;

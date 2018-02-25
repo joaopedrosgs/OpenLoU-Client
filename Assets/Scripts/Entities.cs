@@ -40,7 +40,7 @@ namespace Assets.Scripts
         public int Level;
     }
 
-    public class ConstructionType
+    public struct ConstructionType
     {
         public int ID;
         public string Name;

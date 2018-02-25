@@ -24,7 +24,7 @@ public class CityController : MonoBehaviour
     public IEnumerator UpdateCityView()
     {
 
-        if (DataHolder.SelectedCity.Data == null || DataHolder.SelectedCity.Data.Constructions == null)
+        if (DataHolder.SelectedCity != null && (DataHolder.SelectedCity.Data == null || DataHolder.SelectedCity.Data.Constructions == null))
         {
             var map = new Dictionary<string, int>();
             map["CityID"] = DataHolder.SelectedCity.ID;
@@ -33,35 +33,29 @@ public class CityController : MonoBehaviour
         }
         else
         {
+            Debug.Log("Setando tiles");
 
             Tilemap.ClearAllTiles();
-            if (DataHolder.SelectedCity.Data != null &&
-                DataHolder.SelectedCity.Data.Constructions != null &&
-                DataHolder.SelectedCity.Data.Constructions.Any())
-                foreach (var construction in DataHolder.SelectedCity.Data.Constructions)
+            foreach (var construction in DataHolder.SelectedCity.Data.Constructions)
+            {
+                var constructionClass = DataHolder.ConstructionTypes.First(x => x.ID == construction.Type);
+                Debug.Log(construction.Type);
+                Debug.Log(DataHolder.ConstructionTypes.Count);
+                if (!constructionClass.Equals(default(ConstructionType)))
                 {
-                    var constructionClass = DataHolder.ConstructionTypes.First(x => x.ID == construction.Type);
-                    if (constructionClass != null)
+                    if (constructionClass.Tile)
                     {
-
-
-                        if (constructionClass.Tile)
-                            Tilemap.SetTile(new Vector3Int(construction.X, construction.Y, 0), constructionClass.Tile);
-                        else
-                            Debug.Log("Tile nao encontrado:" + constructionClass.Name);
+                        Tilemap.SetTile(new Vector3Int(construction.X, construction.Y, 0), constructionClass.Tile);
+                        Debug.Log("Setando tile");
                     }
                     else
-                    {
-                        Debug.Log("Tile nao encontrado, tipo:" + construction.Type);
-
-                    }
+                        Debug.Log("Tile nao encontrado:" + constructionClass.Name);
                 }
-            else
-            {
-                Debug.Log("Nenhuma construção");
-                Debug.Log(DataHolder.SelectedCity.Data);
+                else
+                    Debug.Log("Tile nao encontrado, tipo:" + construction.Type);
             }
         }
+
         gameObject.transform.position -= Tilemap.CellToWorld(new Vector3Int(11, 11, 0));
         yield return null;
 
@@ -88,7 +82,7 @@ public class CityController : MonoBehaviour
         Decal.transform.localPosition = Tilemap.CellToLocal(cell);
         Decal.SetActive(true);
         var construction = DataHolder.SelectedCity.Data.Constructions.Find(x => x.X == cell.x & x.Y == cell.y);
-        if (construction == null)
+        if (construction.Equals(construction))
             uiController.ShowBuildMenu(cell.x, cell.y);
         else
             uiController.ShowInfoAboutConstruction(construction);

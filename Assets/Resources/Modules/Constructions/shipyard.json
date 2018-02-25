@@ -1,6 +1,7 @@
 {
-  "id": 23,
+  "id": 26,
   "name": "Shipyard",
+  "info": "Enables recruitment of naval units and, if upgraded, increases their recruitment speed. Placing a Barracks nearby further increases recruitment speed.",
   "bonus": [{
     "name": "navalRecruitingSpeed",
     "value": [
