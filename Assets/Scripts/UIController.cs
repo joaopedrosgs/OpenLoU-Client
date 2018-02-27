@@ -24,6 +24,14 @@ public class UIController : MonoBehaviour
     public CameraScript CameraScript;
     public ConstructionInfo ConstructionInfo;
 
+    public GameObject BuildingQueue;
+
+    public GameObject BuildingDetailPopup;
+    public GameObject BuildingConstructionPopup;
+    public GameObject BuildingConstructionListPopup;
+
+    public GameObject PopupToolbar;
+
     private void Awake()
     {
         XInputField = GameObject.Find("XInput").GetComponent<InputField>();
@@ -112,8 +120,18 @@ public class UIController : MonoBehaviour
         Debug.Log(JsonConvert.SerializeObject(GetSelectedCity()));
     }
 
-    public void ShowBuildMenu(int x, int y)
+    public void ShowConstructionList(int x, int y)
     {
-
+        BuildingDetailPopup.SetActive(false);
+        BuildingConstructionPopup.SetActive(false);
+        BuildingConstructionListPopup.SetActive(true);
+        PopupToolbar.SetActive(true);
+    }
+    public void CloseLeftSidePopup()
+    {
+        BuildingDetailPopup.SetActive(false);
+        BuildingConstructionPopup.SetActive(false);
+        BuildingConstructionListPopup.SetActive(false);
+        PopupToolbar.SetActive(false);
     }
 }

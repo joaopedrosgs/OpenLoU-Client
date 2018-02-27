@@ -26,65 +26,68 @@ public class Receiver : MonoBehaviour
         var answerGeneric = JsonConvert.DeserializeObject<AnswerGeneric>(received);
 
         if (!answerGeneric.Ok)
-            return;
-
-        switch (answerGeneric.Type)
         {
-            case AnswerTypes.UpgradeConstruction:
-                {
-                    break;
-                }
-            case AnswerTypes.NewConstruction:
-                {
-                    break;
-                }
-            case AnswerTypes.GetConstructions:
-                {
-                    Debug.Log("Recebendo construcoes");
-                    var constructions = JsonConvert.DeserializeObject<Constructions>(received);
-                    if (DataHolder.UserCities != null && constructions != null)
+
+        }
+        else
+            switch (answerGeneric.Type)
+            {
+                case AnswerTypes.UpgradeConstruction:
                     {
-                        var cityFound = DataHolder.UserCities.Find(city => city.ID == constructions.Data[0].CityID);
-                        if (cityFound.Data == null)
+                        break;
+                    }
+                case AnswerTypes.NewConstruction:
+                    {
+
+                        break;
+                    }
+                case AnswerTypes.GetConstructions:
+                    {
+                        Debug.Log("Recebendo construcoes");
+                        var constructions = JsonConvert.DeserializeObject<Constructions>(received);
+                        if (DataHolder.UserCities != null && constructions != null)
                         {
-                            cityFound.Data = new CityData();
+                            var cityFound = DataHolder.UserCities.Find(city => city.ID == constructions.Data[0].CityID);
+                            if (cityFound.Data == null)
+                            {
+                                cityFound.Data = new CityData();
+                            }
+
+                            cityFound.Data.Constructions = constructions.Data;
+                            if (CityController != null)
+                                StartCoroutine(CityController.UpdateCityView());
+                        }
+                        else
+                        {
+                            Debug.Log("Erro ao receber");
                         }
 
-                        cityFound.Data.Constructions = constructions.Data;
-                        if (CityController != null)
-                            StartCoroutine(CityController.UpdateCityView());
+                        break;
                     }
-                    else
+                case AnswerTypes.CreateCity:
+                    break;
+                case AnswerTypes.GetCities:
                     {
-                        Debug.Log("Erro ao receber");
+                        var cities = JsonConvert.DeserializeObject<Cities>(received);
+                        DataHolder.RegionCities = cities.Data;
+                        Debug.Log(cities.Data[0].Name);
+                        if (RegionController.gameObject.activeInHierarchy)
+                            RegionController.UpdateRegionView();
                     }
-
                     break;
-                }
-            case AnswerTypes.CreateCity:
-                break;
-            case AnswerTypes.GetCities:
-                {
-                    var cities = JsonConvert.DeserializeObject<Cities>(received);
-                    DataHolder.RegionCities = cities.Data;
-                    Debug.Log(cities.Data[0].Name);
-                    if (RegionController.gameObject.activeInHierarchy)
-                        RegionController.UpdateRegionView();
-                }
-                break;
-            case AnswerTypes.GetCitiesFromUser:
-                {
-                    var userCities = JsonConvert.DeserializeObject<Cities>(received);
-                    DataHolder.UserCities.AddRange(userCities.Data);
-                    if (UIController != null)
-                        UIController.PopulateCitiesDropdown();
-                }
-                break;
-            default:
-                {
+                case AnswerTypes.GetCitiesFromUser:
+                    {
+                        var userCities = JsonConvert.DeserializeObject<Cities>(received);
+                        DataHolder.UserCities.AddRange(userCities.Data);
+                        if (UIController != null)
+                            UIController.PopulateCitiesDropdown();
+                    }
                     break;
-                }
-        }
+                default:
+                    {
+                        break;
+                    }
+            }
     }
 
     // Use this for initialization

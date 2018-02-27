@@ -6,7 +6,7 @@ public enum AnswerTypes
     CreateCity = 101,
     GetCities = 102,
     GetCitiesFromUser = 103,
-        
+
     UpgradeConstruction = 201,
     NewConstruction = 202,
     GetConstructions = 203
@@ -25,4 +25,11 @@ public class Cities
 public class Constructions
 {
     public List<Construction> Data;
+}
+public class NewConstruction
+{
+    public int Type;
+    public int X;
+    public int Y;
+    public int CityID;
 }

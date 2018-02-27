@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 
 namespace Assets.Scripts
@@ -47,6 +48,14 @@ namespace Assets.Scripts
 
         public UnityEngine.Tilemaps.Tile Tile;
 
+    }
+    public struct ConstructionUpdate
+    {
+        public int ConstructionID;
+        public int CityID;
+        public int Index;
+        public TimeSpan Duration;
+        public DateTime Start;
     }
 
 

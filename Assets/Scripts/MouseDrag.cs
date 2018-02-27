@@ -40,7 +40,7 @@ public class MouseDrag : MonoBehaviour
             if (CityView.activeInHierarchy)
             {
                 var newPosition = CityView.transform.position + offset;
-                CityView.transform.position = newPosition;
+                CityView.transform.position = Vector3.Lerp(CityView.transform.position, newPosition, 1);
             }
             else if (RegionView.activeInHierarchy)
             {

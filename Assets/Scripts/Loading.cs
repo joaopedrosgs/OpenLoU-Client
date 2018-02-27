@@ -34,22 +34,24 @@ public class Loading : MonoBehaviour
     {
         Client.WriteToServer(AnswerTypes.GetCitiesFromUser, null);
         PopulateConstructionList();
-        yield return new WaitUntil(() => DataHolder.UserCities.Count > 0 && DataHolder.SelectedCity != null);
-        var map = new Dictionary<string, int>();
-        map["CityID"] = DataHolder.SelectedCity.ID;
-        Client.WriteToServer(AnswerTypes.GetConstructions, map);
-        yield return new WaitUntil(() => DataHolder.SelectedCity.Data != null && DataHolder.SelectedCity.Data.Constructions != null);
+        PopulateTilesList();
+        yield return new WaitUntil(() => DataHolder.UserCities.Count > 0);
+        Client.GetCityConstructions(DataHolder.SelectedCity);
+        yield return new WaitUntil(() => DataHolder.SelectedCity.Data != null);
+        Loaded = true;
+
+    }
+
+    private void PopulateTilesList()
+    {
         for (var i = 0; i < DataHolder.ConstructionTypes.Count; i++)
         {
             var type = DataHolder.ConstructionTypes[i];
-            type.Tile = CityConstructionTiles.Find(x => x.name == type.ID.ToString());
+            type.Tile = CityConstructionTiles.Find(x => x.name == type.ID.ToString()); // structs are immutable
             DataHolder.ConstructionTypes[i] = type;
         }
         DataHolder.ConstructionTypes = DataHolder.ConstructionTypes.OrderBy(x => x.ID).ToList();
         DataHolder.RegionCityTiles = RegionCityTiles.OrderBy(x => x.name).ToList();
-
-        Loaded = true;
-
     }
 
     private IEnumerator LoadCityView()

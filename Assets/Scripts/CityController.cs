@@ -10,7 +10,7 @@ public class CityController : MonoBehaviour
 {
     public Tilemap Tilemap;
 
-    private UIController uiController;
+    public UIController UIController;
     // Use this for initialization
 
     public GameObject Decal;
@@ -82,10 +82,10 @@ public class CityController : MonoBehaviour
         Decal.transform.localPosition = Tilemap.CellToLocal(cell);
         Decal.SetActive(true);
         var construction = DataHolder.SelectedCity.Data.Constructions.Find(x => x.X == cell.x & x.Y == cell.y);
-        if (construction.Equals(construction))
-            uiController.ShowBuildMenu(cell.x, cell.y);
+        if (construction == null)
+            UIController.ShowConstructionList(2, 2);
         else
-            uiController.ShowInfoAboutConstruction(construction);
+            UIController.ShowInfoAboutConstruction(construction);
 
     }
 

@@ -50,7 +50,7 @@ public static class Client
     //read message from server
     public static string ReadFromServer()
     {
-        if (_stream==null || !_stream.DataAvailable) return null;
+        if (_stream == null || !_stream.DataAvailable) return null;
         var inStream = new char[_socket.ReceiveBufferSize];
         var read = theReader.Read(inStream, 0, inStream.Length);
         if (read == 0)
@@ -60,6 +60,30 @@ public static class Client
         return new string(inStream);
     }
 
+    public static void GetCityConstructions(City city)
+    {
+        var map = new Dictionary<string, int>();
+        map["CityID"] = city.ID;
+        WriteToServer(AnswerTypes.GetConstructions, map);
+    }
+    public static void CreateNewConstruction(int x, int y, int type)
+    {
+        var index = DataHolder.ConstructionUpdates.FindAll(u => u.CityID == DataHolder.SelectedCity.ID).Count + 1;
+        if (index > 10)
+            return;
+        var map = new Dictionary<string, int>();
+        map["CityID"] = DataHolder.SelectedCity.ID;
+        map["X"] = x;
+        map["Y"] = y;
+        map["Type"] = type;
+        WriteToServer(AnswerTypes.NewConstruction, map);
+        var update = new ConstructionUpdate { };
+        update.CityID = DataHolder.SelectedCity.ID;
+        update.Index = index;
+        update.Duration = TimeSpan.FromSeconds(10);
+        update.Start = DateTime.Now;
+        DataHolder.ConstructionUpdates.Add(update);
+    }
 
 
 }
