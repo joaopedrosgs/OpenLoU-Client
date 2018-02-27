@@ -19,7 +19,7 @@ public class UIController : MonoBehaviour
     private InputField YInputField;
 
     public GameObject RegionView;
-    public GameObject CityView;
+    public CityController CityView;
 
     public CameraScript CameraScript;
     public ConstructionInfo ConstructionInfo;
@@ -27,8 +27,8 @@ public class UIController : MonoBehaviour
     public GameObject BuildingQueue;
 
     public GameObject BuildingDetailPopup;
-    public GameObject BuildingConstructionPopup;
-    public GameObject BuildingConstructionListPopup;
+    public BuildingConstruction BuildingConstructionPopup;
+    public BuildingConstructionList BuildingConstructionListPopup;
 
     public GameObject PopupToolbar;
 
@@ -65,7 +65,7 @@ public class UIController : MonoBehaviour
 
     public void OpenRegionView()
     {
-        CityView.SetActive(false);
+        CityView.gameObject.SetActive(false);
         RegionView.SetActive(true);
         CameraScript.GoToTile(DataHolder.SelectedCity);
 
@@ -73,7 +73,7 @@ public class UIController : MonoBehaviour
 
     public void OpenCityView()
     {
-        CityView.SetActive(true);
+        CityView.gameObject.SetActive(true);
         RegionView.SetActive(false);
         CameraScript.GoToTile(DataHolder.SelectedCity.Data.Constructions.Find(x => x.X == 11 && x.Y == 11));
 
@@ -105,15 +105,8 @@ public class UIController : MonoBehaviour
         dic["CityID"] = cityId;
         Client.WriteToServer(AnswerTypes.UpgradeConstruction, dic);
     }
-    public void CreateConstruction(int Type)
-    {
-        var dic = new Dictionary<string, int>();
-        dic["X"] = DataHolder.SelectedConstruction.X;
-        dic["Y"] = DataHolder.SelectedConstruction.Y;
-        dic["CityID"] = DataHolder.SelectedCity.ID;
-        dic["Type"] = Type;
-        Client.WriteToServer(AnswerTypes.NewConstruction, dic);
-    }
+
+
 
     public void UpdateCityInfo()
     {
@@ -123,15 +116,45 @@ public class UIController : MonoBehaviour
     public void ShowConstructionList(int x, int y)
     {
         BuildingDetailPopup.SetActive(false);
-        BuildingConstructionPopup.SetActive(false);
-        BuildingConstructionListPopup.SetActive(true);
+        BuildingConstructionPopup.gameObject.SetActive(false);
+        BuildingQueue.SetActive(false);
+        BuildingConstructionListPopup.gameObject.SetActive(true);
+        BuildingConstructionPopup.X = x;
+        BuildingConstructionPopup.Y = y;
+        PopupToolbar.GetComponentInChildren<Text>().text = "Select Building";
         PopupToolbar.SetActive(true);
     }
     public void CloseLeftSidePopup()
     {
+        BuildingQueue.SetActive(true);
         BuildingDetailPopup.SetActive(false);
-        BuildingConstructionPopup.SetActive(false);
-        BuildingConstructionListPopup.SetActive(false);
+        BuildingConstructionPopup.gameObject.SetActive(false);
+        BuildingConstructionListPopup.gameObject.SetActive(false);
         PopupToolbar.SetActive(false);
     }
+    public void CreateConstruction(int x, int y, int Type)
+    {
+        var dic = new Dictionary<string, int>();
+        dic["X"] = x;
+        dic["Y"] = y;
+        dic["CityID"] = DataHolder.SelectedCity.ID;
+        dic["Type"] = Type;
+        Assets.Scripts.Construction construction = new Construction { };
+        construction.X = x;
+        construction.Y = y;
+        construction.Type = Type;
+        construction.Level = 0;
+        construction.CityID = DataHolder.SelectedCity.ID;
+        DataHolder.SelectedCity.Data.Constructions.Add(construction);
+        CityView.AddConstruction(construction);
+        Client.WriteToServer(AnswerTypes.NewConstruction, dic);
+    }
+
+    public void ChangeCity(int direction)
+    {
+        CitiesDropdown.value = +direction;
+        DataHolder.SelectedCity = DataHolder.UserCities[CitiesDropdown.value];
+
+    }
+
 }

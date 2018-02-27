@@ -15,7 +15,7 @@ TagManager:
   - 
   - Background
   - Nodes
-  - 
+  - Floating
   - 
   - 
   - 
@@ -52,4 +52,7 @@ TagManager:
     locked: 0
   - name: UI
     uniqueID: 2498007127
+    locked: 0
+  - name: Floating
+    uniqueID: 1526487935
     locked: 0

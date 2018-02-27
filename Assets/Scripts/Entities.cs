@@ -46,7 +46,9 @@ namespace Assets.Scripts
         public int ID;
         public string Name;
 
-        public UnityEngine.Tilemaps.Tile Tile;
+        public string Info;
+
+        public UnityEngine.Tilemaps.TileBase Tile;
 
     }
     public struct ConstructionUpdate

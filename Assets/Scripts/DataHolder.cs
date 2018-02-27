@@ -10,7 +10,7 @@ public static class DataHolder
     public static string Key { get; set; }
     public static List<City> UserCities { get; set; }
     public static List<City> RegionCities { get; set; }
-    public static List<UnityEngine.Tilemaps.Tile> RegionCityTiles;
+    public static List<UnityEngine.Tilemaps.TileBase> RegionCityTiles;
     public static List<ConstructionType> ConstructionTypes;
     public static List<ConstructionUpdate> ConstructionUpdates;
 

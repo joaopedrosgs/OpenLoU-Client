@@ -6,6 +6,7 @@ using Assets.Scripts;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 
 public class Loading : MonoBehaviour
@@ -14,11 +15,13 @@ public class Loading : MonoBehaviour
     public Slider Slider;
     // Use this for initialization
     bool Loaded = false;
-    public List<UnityEngine.Tilemaps.Tile> CityConstructionTiles;
+    public List<UnityEngine.Tilemaps.TileBase> CityConstructionTiles;
 
-    public List<UnityEngine.Tilemaps.Tile> RegionCityTiles;
+    public List<UnityEngine.Tilemaps.TileBase> RegionCityTiles;
 
     public TextAsset[] ConstructionsJson;
+
+    public Text InfoLoading;
 
     void Start()
     {
@@ -32,10 +35,14 @@ public class Loading : MonoBehaviour
 
     private IEnumerator LoadInitialInfo()
     {
+        InfoLoading.text = "Requesting user data";
         Client.WriteToServer(AnswerTypes.GetCitiesFromUser, null);
-        PopulateConstructionList();
-        PopulateTilesList();
         yield return new WaitUntil(() => DataHolder.UserCities.Count > 0);
+        InfoLoading.text = "Populating Construction List";
+        PopulateConstructionList();
+        InfoLoading.text = "Populating Tile List";
+        PopulateTilesList();
+        InfoLoading.text = "Requesting User constructions";
         Client.GetCityConstructions(DataHolder.SelectedCity);
         yield return new WaitUntil(() => DataHolder.SelectedCity.Data != null);
         Loaded = true;
@@ -44,10 +51,11 @@ public class Loading : MonoBehaviour
 
     private void PopulateTilesList()
     {
+
         for (var i = 0; i < DataHolder.ConstructionTypes.Count; i++)
         {
             var type = DataHolder.ConstructionTypes[i];
-            type.Tile = CityConstructionTiles.Find(x => x.name == type.ID.ToString()); // structs are immutable
+            type.Tile = CityConstructionTiles.First(x => x.name == type.ID.ToString()); // structs are immutable
             DataHolder.ConstructionTypes[i] = type;
         }
         DataHolder.ConstructionTypes = DataHolder.ConstructionTypes.OrderBy(x => x.ID).ToList();
@@ -71,6 +79,7 @@ public class Loading : MonoBehaviour
     }
     private void PopulateConstructionList()
     {
+
         DataHolder.ConstructionTypes = new List<ConstructionType>();
         foreach (var ConstructionJson in ConstructionsJson)
         {

@@ -46,7 +46,7 @@ public class RegionController : MonoBehaviour
 
         Tilemap.SetTile(new Vector3Int(city.X, city.Y, 0), FindTile(city));
     }
-    public Tile FindTile(City city)
+    public TileBase FindTile(City city)
     {
 
 
