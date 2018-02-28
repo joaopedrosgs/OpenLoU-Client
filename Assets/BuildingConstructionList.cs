@@ -29,7 +29,7 @@ public class BuildingConstructionList : MonoBehaviour
             newIcon.GetComponent<Button>().onClick.AddListener(() => ConstructionSelected(constructiontype.ID));
             newIcon.transform.SetParent(Content.transform);
             newIcon.transform.localScale = Vector3.one;
-            var position = newIcon.transform.localPosition = Vector3.zero;
+            newIcon.transform.localPosition = Vector3.zero;
         }
     }
 

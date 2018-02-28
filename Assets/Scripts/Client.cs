@@ -84,6 +84,9 @@ public static class Client
         update.Start = DateTime.Now;
         DataHolder.ConstructionUpdates.Add(update);
     }
-
+    public static bool IsAlive()
+    {
+        return _socket != null && _socket.Connected;
+    }
 
 }

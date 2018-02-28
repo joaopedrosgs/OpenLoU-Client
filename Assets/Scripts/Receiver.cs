@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Assets.Scripts;
 using Newtonsoft.Json;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Receiver : MonoBehaviour
@@ -14,7 +15,11 @@ public class Receiver : MonoBehaviour
     private void Update()
     {
         string received = Client.ReadFromServer();
-        if (received != null)
+        if (!Client.IsAlive())
+        {
+            SceneManager.LoadScene(0);
+        }
+        else if (received != null)
         {
             ProcessAnswers(received);
         }

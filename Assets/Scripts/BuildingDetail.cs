@@ -11,7 +11,6 @@ public class ConstructionInfo : MonoBehaviour
     public Text ConstructionName;
     public Image ConstructionImage;
     public Text ConstructionText;
-    private Construction construction;
     private void Update()
     {
 
@@ -19,9 +18,7 @@ public class ConstructionInfo : MonoBehaviour
 
     public void SetConstruction(Construction _construction)
     {
-        // var type = DataHolder
 
-        construction = _construction;
     }
 
     // Use this for initialization

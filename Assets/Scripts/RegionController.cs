@@ -42,8 +42,6 @@ public class RegionController : MonoBehaviour
     }
     public void SetTile(City city)
     {
-        string[] path = { "Assets/Modules/constructions" };
-
         Tilemap.SetTile(new Vector3Int(city.X, city.Y, 0), FindTile(city));
     }
     public TileBase FindTile(City city)
