@@ -7,13 +7,10 @@ using UnityEngine.UI;
 
 public static class DataHolder
 {
-    public static string Key { get; set; }
-    public static List<City> UserCities { get; set; }
-    public static List<City> RegionCities { get; set; }
+    public static User User;
+    public static List<City> Cities { get; set; }
     public static List<UnityEngine.Tilemaps.TileBase> RegionCityTiles;
     public static List<ConstructionType> ConstructionTypes;
-    public static List<ConstructionUpdate> ConstructionUpdates;
-
 
 
     private static City _selectedCity;
@@ -24,8 +21,8 @@ public static class DataHolder
         {
             if (_selectedCity == null)
             {
-                if (UserCities != null && UserCities.Count() > 0)
-                    _selectedCity = UserCities[0];
+                if (Cities != null && Cities.Count() > 0)
+                    _selectedCity = Cities.ElementAt(0);
             }
 
             return _selectedCity;
@@ -59,11 +56,12 @@ public static class DataHolder
     public static List<Dropdown.OptionData> GetDropdownOptions()
     {
         List<Dropdown.OptionData> names = new List<Dropdown.OptionData>();
-        if (UserCities != null)
+        if (Cities != null)
         {
-            foreach (var city in UserCities)
+            var userCities = Cities.FindAll(x => x.UserName == User.Name);
+            foreach (var city in userCities)
             {
-                CityDropdownData data = new CityDropdownData(city.Name, city.ID);
+                CityDropdownData data = new CityDropdownData(city.Name, city.X, city.Y);
                 names.Add(data);
             }
             names = names.OrderBy(x => x.text).ToList();
@@ -74,16 +72,17 @@ public static class DataHolder
 
 public class CityDropdownData : Dropdown.OptionData
 {
-    public int CityID;
+    public City City;
 
-    public CityDropdownData(string text, int cityId) : base(text)
+    public CityDropdownData(string text, City city) : base(text)
     {
-        CityID = cityId;
+        City = city;
     }
 
-    public CityDropdownData(string text, Sprite image, int cityId) : base(text, image)
+    public CityDropdownData(string text, Sprite image, City city) : base(text, image)
     {
-        CityID = cityId;
+        City = city;
+
     }
 
 }

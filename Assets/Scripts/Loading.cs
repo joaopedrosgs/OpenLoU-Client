@@ -23,11 +23,14 @@ public class Loading : MonoBehaviour
 
     public Text InfoLoading;
 
-    void Start()
+    void Awake()
     {
-        DataHolder.RegionCities = new List<City>();
-        DataHolder.UserCities = new List<City>();
+
+        DataHolder.Cities = new List<City>();
         Client.SetupSocket();
+    }
+    private void Start()
+    {
 
         StartCoroutine(LoadCityView());
         StartCoroutine(LoadInitialInfo());
@@ -36,15 +39,18 @@ public class Loading : MonoBehaviour
     private IEnumerator LoadInitialInfo()
     {
         InfoLoading.text = "Requesting user data";
-        Client.WriteToServer(AnswerTypes.GetCitiesFromUser, null);
-        yield return new WaitUntil(() => DataHolder.UserCities.Count > 0);
+        Client.GetCitiesFromUser();
+        yield return new WaitUntil(() => DataHolder.Cities.Count > 0);
         InfoLoading.text = "Populating Construction List";
         PopulateConstructionList();
         InfoLoading.text = "Populating Tile List";
         PopulateTilesList();
         InfoLoading.text = "Requesting User constructions";
         Client.GetCityConstructions(DataHolder.SelectedCity);
-        yield return new WaitUntil(() => DataHolder.SelectedCity.Data != null);
+        yield return new WaitUntil(() => DataHolder.SelectedCity.Constructions != null);
+        Client.GetUpdatesFromCity(DataHolder.SelectedCity);
+        yield return new WaitForSeconds(1);
+
         Loaded = true;
 
     }

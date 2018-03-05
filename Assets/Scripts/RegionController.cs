@@ -20,14 +20,9 @@ public class RegionController : MonoBehaviour
 
         Tilemap.ClearAllTiles();
 
-        var map = new Dictionary<string, int>();
-        if (DataHolder.UserCities.Count > 0)
+        if (DataHolder.SelectedCity != null)
         {
-            map["X"] = DataHolder.SelectedCity.X;
-            map["Y"] = DataHolder.SelectedCity.Y;
-            map["Continent"] = DataHolder.SelectedCity.ContinentID;
-            map["Range"] = 10;
-            Client.WriteToServer(AnswerTypes.GetCities, map);
+            Client.GetCitiesFromRegion(DataHolder.SelectedCity);
         }
     }
 
@@ -35,7 +30,7 @@ public class RegionController : MonoBehaviour
 
     public void UpdateRegionView()
     {
-        foreach (var city in DataHolder.RegionCities)
+        foreach (var city in DataHolder.Cities)
         {
             SetTile(city);
         }

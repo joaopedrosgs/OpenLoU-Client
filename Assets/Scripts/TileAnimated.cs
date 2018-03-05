@@ -5,6 +5,7 @@ namespace UnityEngine.Tilemaps
 {
     public class TileAnimated : TileBase
     {
+
         public Sprite[] Animation;
         public override void GetTileData(Vector3Int location, ITilemap tileMap, ref TileData tileData)
         {

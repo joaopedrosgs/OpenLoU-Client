@@ -1,21 +1,22 @@
 ﻿using System.Collections.Generic;
 using Assets.Scripts;
 
-public enum AnswerTypes
+public enum RequestType
 {
-    CreateCity = 101,
-    GetCities = 102,
-    GetCitiesFromUser = 103,
-
-    UpgradeConstruction = 201,
-    NewConstruction = 202,
-    GetConstructions = 203
+    GetUserInfo = 101,
+    CreateCity = 201,
+    GetCities = 202,
+    GetCitiesFromUser = 203,
+    UpgradeConstruction = 301,
+    NewConstruction = 302,
+    GetConstructions = 303,
+    GetUpgrades = 304
 }
 
 public class AnswerGeneric
 {
     public bool Ok;
-    public AnswerTypes Type;
+    public RequestType Type;
 }
 
 public class Cities
@@ -25,6 +26,10 @@ public class Cities
 public class Constructions
 {
     public List<Construction> Data;
+}
+public class ConstructionUpdates
+{
+    public List<ConstructionUpdate> Data;
 }
 public class NewConstruction
 {

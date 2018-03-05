@@ -25,22 +25,17 @@ public class CityController : MonoBehaviour
     public IEnumerator UpdateCityView()
     {
 
-        if (DataHolder.SelectedCity != null && (DataHolder.SelectedCity.Data == null || DataHolder.SelectedCity.Data.Constructions == null))
+        if (DataHolder.SelectedCity != null && (DataHolder.SelectedCity == null || DataHolder.SelectedCity.Constructions == null))
         {
-            var map = new Dictionary<string, int>();
-            map["CityID"] = DataHolder.SelectedCity.ID;
-            Client.WriteToServer(AnswerTypes.GetConstructions, map);
+            Client.GetConstructionsFrom(DataHolder.SelectedCity);
+            yield return new WaitUntil(() => DataHolder.SelectedCity != null);
 
         }
-        else
-        {
-            Debug.Log("Setando tiles");
 
-            Tilemap.ClearAllTiles();
-            foreach (var construction in DataHolder.SelectedCity.Data.Constructions)
-            {
-                AddConstruction(construction);
-            }
+        Tilemap.ClearAllTiles();
+        foreach (var construction in DataHolder.SelectedCity.Constructions)
+        {
+            AddConstruction(construction);
         }
 
         gameObject.transform.position -= Tilemap.CellToWorld(new Vector3Int(11, 11, 0));
@@ -54,7 +49,7 @@ public class CityController : MonoBehaviour
         {
             Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(pos, -Vector2.up);
-            if (hit && hit.collider != null)
+            if (hit && hit.collider != null && hit.transform.CompareTag("CityView"))
             {
                 HighlightTile(hit.point);
             }
@@ -68,7 +63,7 @@ public class CityController : MonoBehaviour
         var cell = Tilemap.WorldToCell(globalPos);
         Decal.transform.localPosition = Tilemap.CellToLocal(cell);
         Decal.SetActive(true);
-        var construction = DataHolder.SelectedCity.Data.Constructions.Find(x => x.X == cell.x & x.Y == cell.y);
+        var construction = DataHolder.SelectedCity.Constructions.Find(x => x.X == cell.x & x.Y == cell.y);
         if (construction == null)
             UIController.ShowConstructionList(cell.x, cell.y);
         else

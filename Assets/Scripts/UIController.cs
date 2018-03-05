@@ -22,11 +22,10 @@ public class UIController : MonoBehaviour
     public CityController CityView;
 
     public CameraScript CameraScript;
-    public ConstructionInfo ConstructionInfo;
 
-    public GameObject BuildingQueue;
+    public BuildingQueue BuildingQueue;
 
-    public GameObject BuildingDetailPopup;
+    public BuildingDetail BuildingDetailPopup;
     public BuildingConstruction BuildingConstructionPopup;
     public BuildingConstructionList BuildingConstructionListPopup;
 
@@ -58,7 +57,7 @@ public class UIController : MonoBehaviour
     {
         DataHolder.SelectedCity = GetSelectedCity();
         //Camera.main.GetComponent<CameraScript>().GoToTile(11, 11);
-        continentDropdown.value = DataHolder.SelectedCity.ContinentID;
+        continentDropdown.value = DataHolder.SelectedCity.ContinentID();
         XInputField.text = DataHolder.SelectedCity.X.ToString();
         YInputField.text = DataHolder.SelectedCity.Y.ToString();
     }
@@ -75,35 +74,31 @@ public class UIController : MonoBehaviour
     {
         CityView.gameObject.SetActive(true);
         RegionView.SetActive(false);
-        CameraScript.GoToTile(DataHolder.SelectedCity.Data.Constructions.Find(x => x.X == 11 && x.Y == 11));
+        CameraScript.GoToTile(11, 11);
 
     }
 
     public City GetSelectedCity()
     {
-        if (CitiesDropdown == null)
-        {
-            CitiesDropdown = GameObject.Find("CitiesDropdown").GetComponent<Dropdown>();
-        }
-
         var indice = CitiesDropdown.value;
-        var CityID = ((CityDropdownData)CitiesDropdown.options[indice]).CityID;
-        return DataHolder.UserCities.First(city => city.ID == CityID);
+        var DropdownData = ((CityDropdownData)CitiesDropdown.options[indice]);
+        return DropdownData.City;
     }
 
     public void ShowInfoAboutConstruction(Construction construction)
     {
-        ConstructionInfo.gameObject.SetActive(true);
-        ConstructionInfo.SetConstruction(construction);
+
+        PopupToolbar.SetActive(true);
+        BuildingDetailPopup.gameObject.SetActive(true);
+        BuildingConstructionPopup.gameObject.SetActive(false);
+        BuildingQueue.gameObject.SetActive(false);
+        BuildingConstructionListPopup.gameObject.SetActive(false);
+        BuildingDetailPopup.SetConstruction(construction);
     }
 
-    public void UpgradeConstruction(int x, int y, int cityId)
+    public void UpgradeConstruction(Construction construction)
     {
-        var dic = new Dictionary<string, int>();
-        dic["X"] = x;
-        dic["Y"] = y;
-        dic["CityID"] = cityId;
-        Client.WriteToServer(AnswerTypes.UpgradeConstruction, dic);
+        Client.UpgradeConstruction(construction);
     }
 
 
@@ -115,9 +110,9 @@ public class UIController : MonoBehaviour
 
     public void ShowConstructionList(int x, int y)
     {
-        BuildingDetailPopup.SetActive(false);
+        BuildingDetailPopup.gameObject.SetActive(false);
         BuildingConstructionPopup.gameObject.SetActive(false);
-        BuildingQueue.SetActive(false);
+        BuildingQueue.gameObject.SetActive(false);
         BuildingConstructionListPopup.gameObject.SetActive(true);
         BuildingConstructionPopup.X = x;
         BuildingConstructionPopup.Y = y;
@@ -126,34 +121,42 @@ public class UIController : MonoBehaviour
     }
     public void CloseLeftSidePopup()
     {
-        BuildingQueue.SetActive(true);
-        BuildingDetailPopup.SetActive(false);
+        BuildingQueue.gameObject.SetActive(true);
+        BuildingDetailPopup.gameObject.SetActive(false);
         BuildingConstructionPopup.gameObject.SetActive(false);
         BuildingConstructionListPopup.gameObject.SetActive(false);
         PopupToolbar.SetActive(false);
     }
-    public void CreateConstruction(int x, int y, int Type)
+    public void CreateConstruction(int x, int y, int type)
     {
-        var dic = new Dictionary<string, int>();
-        dic["X"] = x;
-        dic["Y"] = y;
-        dic["CityID"] = DataHolder.SelectedCity.ID;
-        dic["Type"] = Type;
-        Assets.Scripts.Construction construction = new Construction { };
-        construction.X = x;
-        construction.Y = y;
-        construction.Type = Type;
-        construction.Level = 0;
-        construction.CityID = DataHolder.SelectedCity.ID;
-        DataHolder.SelectedCity.Data.Constructions.Add(construction);
+        var index = DataHolder.SelectedCity.BuildingQueue.Count;
+        if (index > 9)
+            return;
+        Client.CreateNewConstruction(x, y, type);
+        var update = new ConstructionUpdate { };
+        update.CityX = DataHolder.SelectedCity.X;
+        update.CityY = DataHolder.SelectedCity.Y;
+        update.Index = index + 1;
+        update.Duration = TimeSpan.FromSeconds(10);
+        if (index == 1) update.Start = DateTime.Now;
+        DataHolder.SelectedCity.BuildingQueue.Add(update);
+
+        Assets.Scripts.Construction construction = new Construction(DataHolder.SelectedCity.X, DataHolder.SelectedCity.Y, x, y, type, 0);
+        DataHolder.SelectedCity.Constructions.Add(construction);
         CityView.AddConstruction(construction);
-        Client.WriteToServer(AnswerTypes.NewConstruction, dic);
+        BuildingQueue.AddElement(update);
+
+
+    }
+    public void UpdateBuildingQueue()
+    {
+        BuildingQueue.UpdateQueue();
     }
 
     public void ChangeCity(int direction)
     {
         CitiesDropdown.value = +direction;
-        DataHolder.SelectedCity = DataHolder.UserCities[CitiesDropdown.value];
+        DataHolder.SelectedCity = DataHolder.Cities.ElementAt(CitiesDropdown.value);
 
     }
 

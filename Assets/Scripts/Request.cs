@@ -6,12 +6,12 @@ namespace Assets.Scripts
     public class Request
     {
         public string Key;
-        public AnswerTypes Type;
+        public RequestType Type;
         public Dictionary<string, int> Data;
 
-        public Request(AnswerTypes type, Dictionary<string, int> data)
+        public Request(RequestType type, Dictionary<string, int> data)
         {
-            Key = DataHolder.Key;
+            Key = DataHolder.User.Key;
             Type = type;
             Data = data;
         }

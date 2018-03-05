@@ -67,6 +67,13 @@ public class CameraScript : MonoBehaviour
         CityController.gameObject.transform.position -= tilePos;
 
     }
+    public void GoToTile(int x, int y)
+    {
+
+        var tilePos = CityController.Tilemap.CellToWorld(new Vector3Int(x, y, 0));
+        CityController.gameObject.transform.position -= tilePos;
+
+    }
 
     public void GoToTile(City city)
     {
